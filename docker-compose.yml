@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_URL=http://ollama:11434
+      - MODEL_NAME=llama3.2:1b
+    depends_on:
+      ollama-model:
+        condition: service_completed_successfully
+    volumes:
+      - chroma_data:/app/my_rag_db
+
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck: # Persistent health check to ensure Ollama is running every 30 seconds
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 3s
+      retries: 30
+
+  ollama-model: 
+    image: ollama/ollama
+    depends_on: # Ollama must be healthy
+      ollama:
+        condition: service_healthy
+    environment: 
+      OLLAMA_HOST: http://ollama:11434
+    command: ["pull", "llama3.2:1b"] # Install the necessary model
+
+volumes:
+  chroma_data:
+  ollama_data:

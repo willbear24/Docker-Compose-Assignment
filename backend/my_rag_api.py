@@ -14,8 +14,8 @@ app.add_middleware(
 )
 
 # --- Config ---
-OLLAMA_URL = "http://host.docker.internal:11434"
-MODEL = "llama3.2:1b"
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+MODEL = os.environ.get("MODEL_NAME", "llama3.2:1b")
 DB_PATH = "./my_rag_db"
 
 # --- ChromaDB Setup ---
