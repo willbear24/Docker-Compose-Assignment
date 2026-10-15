@@ -14,7 +14,7 @@ app.add_middleware(
 )
 
 # --- Config ---
-OLLAMA_URL = OLLAMA_URL = "http://localhost:11434"
+OLLAMA_URL = "http://host.docker.internal:11434"
 MODEL = "llama3.2:1b"
 DB_PATH = "./my_rag_db"
 
@@ -179,3 +179,6 @@ def health():
         "ollama": "ok" if ollama_ok else "unavailable",
         "documents": collection.count(),
     }
+
+
+# Added comment to confirm caching
